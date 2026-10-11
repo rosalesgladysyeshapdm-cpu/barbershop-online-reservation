@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#12392d">
+  <title>Customer | Kuya Pau's Barbershop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <section id="dashboardSection" class="dashboard-section">
+      <aside class="sidebar">
+        <a class="brand sidebar-brand" href="index.html"><span class="brand-mark">✂</span><span>KUYA PAU'S<small>RESERVATION SYSTEM</small></span></a>
+        <div class="user-mini"><div class="avatar" id="userAvatar">K</div><div><b id="sidebarName">Customer</b><small id="sidebarRole">customer</small></div></div>
+        <nav id="dashboardNav" class="dashboard-nav"></nav>
+        <button id="logoutBtn" class="logout-btn">↪ &nbsp; Log out</button>
+      </aside>
+      <div class="dashboard-main">
+        <header class="dashboard-topbar"><button class="menu-toggle dash-menu" id="dashMenuToggle" aria-label="Toggle dashboard menu">☰</button><div><p class="eyebrow" id="dashEyebrow">CUSTOMER AREA</p><h2 id="pageTitle">Dashboard</h2></div><div class="topbar-user"><span class="online-dot"></span><span id="topbarName">Customer</span></div></header>
+        <div id="dashboardContent" class="dashboard-content"><div class="panel">Loading your dashboard…</div></div>
+      </div>
+    </section>
+  </main>
+  <div id="modalRoot"></div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>

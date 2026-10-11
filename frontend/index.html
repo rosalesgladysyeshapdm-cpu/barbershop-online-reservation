@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#12392d">
+  <title>Kuya Pau's Barbershop | Online Reservation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="Home">
+      <img src="assets/logo.png" alt="Barbershop logo" class="logo" onerror="this.style.display='none'">
+      <span>KUYA PAU'S <small>BARBERSHOP</small></span>
+    </a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">☰</button>
+    <nav id="mainNav">
+      <a href="#home" class="nav-link active">Home</a>
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#about" class="nav-link">About Us</a>
+      <a href="#contact" class="nav-link">Contact Us</a>
+      <button class="btn btn-pink btn-small" data-view="login">Book an Appointment</button>
+      <button class="nav-login" data-view="login">Login</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="hero section">
+      <div class="hero-copy">
+        <p class="eyebrow">YOUR STYLE. YOUR TIME.</p>
+        <h1>A fresh cut.<br><span>A better day.</span></h1>
+        <p class="lead">Book your next haircut online. Choose your service, preferred barber, and appointment time without waiting in line.</p>
+        <div class="hero-actions">
+          <button class="btn btn-pink" data-view="login">Book an Appointment <span>↗</span></button>
+          <a class="btn btn-outline" href="#services">Explore Services</a>
+        </div>
+        <div class="hero-note"><span class="status-dot"></span> Online reservations made simple</div>
+      </div>
+      <div class="hero-art">
+        <div class="hero-frame">
+          <img src="assets/barbers/barber-1.jpg" alt="Barber at work" onerror="this.parentElement.classList.add('image-missing'); this.style.display='none'">
+          <div class="image-placeholder"><span>✂</span><b>Your barber photo goes here</b><small>frontend/assets/barbers/barber-1.jpg</small></div>
+        </div>
+        <div class="floating-card"><span class="scissor">✂</span><div><b>Book online</b><small>Choose your schedule</small></div></div>
+        <div class="circle-deco"></div>
+      </div>
+    </section>
+
+    <section id="services" class="section section-pad">
+      <div class="section-heading"><div><p class="eyebrow">THE MENU</p><h2>Our Services</h2><p>Choose the cut that fits your style.</p></div><span class="mini-label">SERVICE LIST</span></div>
+      <div id="publicServices" class="service-grid"><p class="muted">Loading services…</p></div>
+    </section>
+
+    <section id="about" class="section about-section">
+      <div class="about-photo">
+        <img src="assets/barbers/barber-2.jpg" alt="Barber shop team" onerror="this.parentElement.classList.add('image-missing'); this.style.display='none'">
+        <div class="image-placeholder"><span>♙</span><b>Add a barber/team photo</b><small>frontend/assets/barbers/barber-2.jpg</small></div>
+      </div>
+      <div class="about-copy">
+        <p class="eyebrow">ABOUT THE SHOP</p><h2>Good cuts.<br><span>Good people.</span></h2>
+        <p>We want booking a haircut to be as easy as getting one. Browse services, select a preferred barber, and reserve a schedule online.</p>
+        <div class="about-points"><p>✦ Easy online reservations</p><p>✦ Clear service prices</p><p>✦ Appointment updates in one place</p></div>
+        <button class="btn btn-pink" data-view="login">Reserve Your Slot</button>
+      </div>
+    </section>
+
+    <section id="contact" class="section section-pad contact-section">
+      <div class="section-heading"><div><p class="eyebrow">SAY HELLO</p><h2>Contact Us</h2><p>Update these sample details to your real shop information.</p></div></div>
+      <div class="contact-grid">
+        <div class="contact-card"><span>⌖</span><h3>Visit Us</h3><p>Ma. Socorro, Abangan Norte<br>Marilao, Bulacan</p></div>
+        <div class="contact-card"><span>☎</span><h3>Call Us</h3><p>Replace with shop contact number</p></div>
+        <div class="contact-card"><span>◷</span><h3>Business Hours</h3><p>Set your real business hours here</p></div>
+      </div>
+    </section>
+
+    <section id="authSection" class="section auth-section hidden">
+      <div class="auth-card">
+        <button class="back-link" id="backToSite">← Back to website</button>
+        <div class="auth-brand"><span class="brand-mark">✂</span><p class="eyebrow">KUYA PAU'S BARBERSHOP</p></div>
+        <div id="loginPanel">
+          <h2>Welcome back.</h2><p class="muted">Log in to manage your reservations.</p>
+          <form id="loginForm">
+            <label for="loginKey">Username or email</label><input id="loginKey" name="login" required autocomplete="username" placeholder="Enter username or email">
+            <label for="loginPassword">Password</label><input id="loginPassword" name="password" type="password" required autocomplete="current-password" placeholder="Enter password">
+            <button class="btn btn-pink full" type="submit">Login <span>→</span></button>
+            <p id="loginMessage" class="form-message" aria-live="polite"></p>
+          </form>
+          <p class="auth-switch">Don't have an account? <button class="text-button" id="showRegister">Create account</button></p>
+        </div>
+        <div id="registerPanel" class="hidden">
+          <h2>Create account.</h2><p class="muted">Register as a customer to book an appointment.</p>
+          <form id="registerForm">
+            <label for="regName">Full name</label><input id="regName" required maxlength="100" placeholder="Your full name">
+            <label for="regUsername">Username</label><input id="regUsername" required minlength="3" maxlength="40" pattern="[A-Za-z0-9_.-]+" placeholder="Choose a username">
+            <label for="regEmail">Email</label><input id="regEmail" type="email" required placeholder="you@example.com">
+            <label for="regPhone">Contact number (optional)</label><input id="regPhone" type="tel" placeholder="09xx xxx xxxx">
+            <label for="regPassword">Password (at least 8 characters)</label><input id="regPassword" type="password" required minlength="8" autocomplete="new-password">
+            <button class="btn btn-pink full" type="submit">Create Account <span>→</span></button>
+            <p id="registerMessage" class="form-message" aria-live="polite"></p>
+          </form>
+          <p class="auth-switch">Already registered? <button class="text-button" id="showLogin">Login</button></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><a class="brand" href="#home"><span class="brand-mark">✂</span><span>KUYA PAU'S <small>BARBERSHOP</small></span></a><p>Sharp style. Easy reservations.</p><small>© <span id="year"></span> Kuya Pau's Barbershop</small></footer>
+
+  <div id="modalRoot"></div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>

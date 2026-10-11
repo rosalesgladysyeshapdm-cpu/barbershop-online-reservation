@@ -1,0 +1,153 @@
+KUYA PAU'S BARBERSHOP — STEP-BY-STEP SETUP
+===========================================
+
+PART 1 — OPEN THE PROJECT IN VISUAL STUDIO CODE
+1. Download and extract barbershop-online-reservation.zip.
+2. Install Node.js LTS from https://nodejs.org/ and Git from https://git-scm.com/ if not installed.
+3. Open VS Code → File → Open Folder → select the extracted `barbershop-online-reservation` folder.
+4. In VS Code, open Terminal → New Terminal.
+5. The project folders:
+   frontend/index.html  = website page structure
+   frontend/style.css  = dark-green and pink design/hover effects
+   frontend/app.js     = interactions, forms, API calls
+   backend/server.js   = API, validation, authentication, CRUD
+   backend/.env.example = template for local secrets (copy to .env)
+6. To change hover behavior, edit CSS selectors such as `.btn:hover`, `.service-card:hover`, `.nav-link:hover`. JavaScript handles behavior such as mobile menus, form validation, modal actions, page switching, and API requests. Hover styling itself is correctly handled by CSS.
+
+PART 2 — ADD YOUR LOGO, BARBER PHOTOS, AND QR CODES
+Put your own images in these exact locations:
+- `frontend/assets/logo.png`                 → barbershop logo
+- `frontend/assets/barbers/barber-1.jpg`    → hero/first barber photo
+- `frontend/assets/barbers/barber-2.jpg`    → About/team photo
+- `frontend/assets/gcash-qr.png`             → real shop GCash QR code
+- `frontend/assets/maya-qr.png`              → real shop Maya QR code
+Create extra folders if needed, e.g. `frontend/assets/services/`.
+Use PNG or JPG/JPEG images. If your photo has a different filename, update the corresponding `src` in `frontend/index.html`. The QR code paths are used in `frontend/app.js`.
+Do not use a personal QR unless the account owner has approved it. Test the QR code and account name before publishing. The project only records an uploaded receipt; it does not automatically verify the e-wallet payment.
+
+PART 3 — CREATE MONGODB ATLAS DATABASE
+1. Go to https://www.mongodb.com/atlas and create/sign in to an account.
+2. Create a free cluster/deployment.
+3. In Database Access, create a database user and a strong password.
+4. In Network Access, add access for your deployment. For a school prototype, Atlas may require allowing `0.0.0.0/0` so Render can connect; this allows connections from any IP, so use a strong database password and remove/restrict this rule where possible.
+5. Click Connect → Drivers → Node.js and copy the connection string.
+6. Replace username/password in the URI. If the password contains special characters, URL-encode it.
+7. Use database name `barbershop_db` in the URI, for example:
+   `mongodb+srv://DB_USER:DB_PASSWORD@cluster-name.mongodb.net/barbershop_db?retryWrites=true&w=majority`
+8. Do NOT put this URI in frontend JavaScript. It belongs only in backend environment variables.
+Collections are created automatically as records are inserted: users, services, reservations, notifications.
+
+PART 4 — SET UP BACKEND LOCALLY
+1. In VS Code terminal:
+   `cd backend`
+   `npm install`
+2. Copy `.env.example` to a new file named `.env` in the same `backend` folder.
+   Windows PowerShell: `Copy-Item .env.example .env`
+   macOS/Linux: `cp .env.example .env`
+3. Open `backend/.env`, fill in MONGODB_URI and create a long random JWT_SECRET. Set:
+   FRONTEND_URL=http://127.0.0.1:5500
+4. Add temporary bootstrap settings for first admin:
+   BOOTSTRAP_KEY=make-a-long-one-time-secret
+   ADMIN_NAME=System Administrator
+   ADMIN_EMAIL=your-admin-email@example.com
+   ADMIN_PASSWORD=Use-A-Long-Unique-Password-Here
+   Use your own unique credentials. Do not send these to anyone or commit them.
+5. Run:
+   `npm run dev`
+6. Visit `http://localhost:5000/api/health`. Expect JSON with status `ok` and database `connected`.
+7. Keep this terminal open.
+
+PART 5 — RUN FRONTEND LOCALLY
+1. In VS Code, install the extension “Live Server” if needed.
+2. Open `frontend/index.html`, right-click → Open with Live Server.
+3. Confirm the browser URL is something like `http://127.0.0.1:5500`.
+4. If Live Server chooses a different port, update FRONTEND_URL in `backend/.env` to that exact origin and restart backend.
+5. `frontend/app.js` uses `const API_URL = "http://localhost:5000";` for local testing.
+6. Register a normal customer account. Login and inspect reservations once services are created.
+
+PART 6 — CREATE FIRST ADMIN
+After local backend is running, use PowerShell or another terminal:
+PowerShell:
+`Invoke-RestMethod -Method Post -Uri http://localhost:5000/api/setup/first-admin -Headers @{"x-bootstrap-key"="make-a-long-one-time-secret"}`
+Replace the key with your actual BOOTSTRAP_KEY. This is a one-time endpoint. After it creates the admin, remove BOOTSTRAP_KEY and ADMIN_PASSWORD from `.env`, restart the backend, and never deploy the bootstrap endpoint with a live key if avoidable.
+If PowerShell gives trouble, use Postman: POST `http://localhost:5000/api/setup/first-admin`, add header `x-bootstrap-key` with the same key, no body.
+Login with the ADMIN_EMAIL and ADMIN_PASSWORD you configured. Change/delete those sample environment entries after account creation.
+
+PART 7 — ADD SERVICES
+1. Login using the admin account.
+2. Open Services in the admin dashboard.
+3. Add service name, price, duration, and description.
+4. Services appear on the public page and customer reservation form.
+5. To create a barber account, open Staff and fill the Create Barber Account form.
+6. Customer registration creates customer accounts only; it cannot self-register as admin or barber.
+
+PART 8 — GITHUB
+1. Create a new empty repository at https://github.com/new (do not add a README if your local folder already has one).
+2. Before pushing, ensure `backend/.env` exists in `.gitignore` and is not staged.
+3. From the project root terminal:
+   `git init`
+   `git add .`
+   `git status`
+   Check that backend/.env is NOT listed. If it is, stop and fix `.gitignore` before continuing.
+   `git commit -m "Create barbershop reservation system"`
+   `git branch -M main`
+   `git remote add origin https://github.com/YOUR-USERNAME/YOUR-REPOSITORY.git`
+   `git push -u origin main`
+4. Replace the URL with your actual GitHub repository URL. Never commit real passwords, tokens, QR account secrets, or private customer data.
+
+PART 9 — DEPLOY BACKEND TO RENDER
+1. Sign in at https://render.com and connect GitHub.
+2. Create → Web Service → select your repository.
+3. Root Directory: `backend`
+4. Runtime: Node.
+5. Build Command: `npm install`
+6. Start Command: `npm start`
+7. Add Environment Variables in Render:
+   - MONGODB_URI = your Atlas connection string
+   - JWT_SECRET = a long random secret different from local
+   - FRONTEND_URL = temporarily `*` only while setting up, or the final exact Vercel domain once known
+   - ADMIN_NAME / ADMIN_EMAIL / ADMIN_PASSWORD / BOOTSTRAP_KEY only if you need to bootstrap the first admin remotely; remove bootstrap secrets immediately after use.
+8. Deploy. Copy your service URL, e.g. `https://your-service.onrender.com`.
+9. Open `https://your-service.onrender.com/api/health`. It should report status `ok` and database `connected`.
+10. If Render says MongoDB connection failed, check Atlas URI, database user/password, network access, and Render logs.
+
+PART 10 — DEPLOY FRONTEND TO VERCEL
+1. Sign in at https://vercel.com and import the GitHub repository.
+2. Set Root Directory to `frontend`.
+3. Framework Preset: Other.
+4. Build Command: leave blank / no build command for plain HTML.
+5. Output Directory: `.` if Vercel asks for one.
+6. Deploy and copy your Vercel domain, e.g. `https://your-site.vercel.app`.
+7. Open `frontend/app.js` and replace:
+   `const API_URL = "http://localhost:5000";`
+   with your actual Render API URL:
+   `const API_URL = "https://your-service.onrender.com";`
+8. Commit and push the change. Vercel should redeploy automatically.
+
+PART 11 — CONFIGURE CORS
+1. In Render → your service → Environment, set FRONTEND_URL to the exact Vercel origin, for example:
+   `https://your-site.vercel.app`
+   Do not include a page path or trailing slash.
+2. If you use a Vercel preview domain, add it as another comma-separated origin only if needed.
+3. Save and redeploy/restart Render.
+4. If the browser says CORS blocked, compare the browser's domain with FRONTEND_URL character-for-character.
+
+PART 12 — TEST REQUIRED FEATURES
+- Register a customer; verify a document appears in Atlas `users`.
+- Log in; confirm protected dashboard is displayed.
+- Add a service as admin; confirm it appears in Atlas `services` and public menu.
+- Create a reservation with a real test receipt image and accepted terms.
+- Confirm reservation and payment status appear in Atlas `reservations`.
+- Verify payment as admin, then confirm reservation.
+- Open the customer account and verify the notification and reservation status.
+- As a barber, view assigned appointments and update the permitted status.
+- Confirm data remains after refreshing/reopening the site.
+- Test invalid email, duplicate username/email, short password, missing fields, wrong image type, file larger than 3 MB, and unauthorized access.
+- Check that customer A cannot read customer B's reservation/proof by changing an ID in the URL.
+
+PART 13 — IMPORTANT LIMITATIONS / NEXT WORK
+- The starter stores payment proof as base64 in MongoDB to keep setup straightforward. For production, use cloud object storage.
+- This starter's appointment time options are simple example slots, not a full real-time working-hours/holiday scheduler. Add business-hour, slot-locking, and double-booking rules before real use.
+- Online account verification email/SMS is not included; the registration form creates a regular customer account.
+- Add full staff availability management, full reports/graphs, PDF export, rescheduling, secure password reset, audit log, and policy review if required by your instructor.
+- For the database rubric, create a separate ERD and normalization write-up (1NF, 2NF, 3NF). The app's MongoDB collections do not automatically create those submission documents.
